@@ -15,8 +15,8 @@ npm run preview
 
 - Production output is written to `dist/`
 - The compiled frontend is served by the C++ backend
-- Local frontend-only secrets should go in `.env.local`
-- Do not commit `.env.local`
+- Default local setup is driven from the root `config.local.json`
+- `.env.local` is not required for the default development flow
 
 ## API Assumption
 

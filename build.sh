@@ -13,7 +13,7 @@ echo ""
 echo "[1/5] Checking system dependencies..."
 NEED_INSTALL=false
 
-for cmd in cmake g++ git curl; do
+for cmd in cmake g++ git curl python3; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
         NEED_INSTALL=true
         break
@@ -31,6 +31,7 @@ if [ "$NEED_INSTALL" = true ]; then
         cmake \
         g++ \
         git \
+        python3 \
         libcurl4-openssl-dev \
         libsqlite3-dev \
         libssl-dev \
@@ -73,13 +74,14 @@ echo "[5/5] Verifying config and starting server..."
 CONFIG_FILE=""
 if [ -f config.local.json ]; then
     CONFIG_FILE="config.local.json"
-elif [ -f config.json ]; then
-    CONFIG_FILE="config.json"
 else
-    cp config.example.json config.local.json
+    if [ -t 0 ]; then
+        python3 scripts/setup_local_config.py --config config.local.json
+    else
+        python3 scripts/setup_local_config.py --config config.local.json --write-defaults
+    fi
     CONFIG_FILE="config.local.json"
-    echo "  Created ${CONFIG_FILE} from config.example.json"
-    echo "  Edit ${CONFIG_FILE} before using live integrations."
+    echo "  Created ${CONFIG_FILE} with the setup wizard"
 fi
 
 echo "  Config file: ${CONFIG_FILE}"

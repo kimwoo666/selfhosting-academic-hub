@@ -39,17 +39,29 @@ config.local.json            Local-only secrets and machine settings
 
 ## Quick Start
 
-### 1. Prepare backend config
+### 1. Run the local setup wizard
 
-Copy the public template to a local config file:
+From the repository root:
 
 ```bash
-cp config.example.json config.local.json
+python scripts/setup_local_config.py
 ```
 
-Fill in local secrets in `config.local.json`.
+This writes `config.local.json` and gathers the local settings in one place:
+
+- Proxmox host, user, token, and node
+- Gemini API key and model
+- Optional LMS credentials
+- Optional Google Calendar credentials
+- Backend port and database path
 
 `config.local.json` is intentionally ignored by Git. The backend will load it first if present.
+
+If you want a non-interactive default file instead:
+
+```bash
+python scripts/setup_local_config.py --write-defaults
+```
 
 ### 2. Frontend development
 
@@ -86,11 +98,13 @@ The backend resolves config in this order:
 
 Use `config.json` and `config.example.json` as public templates only. Put live tokens and local credentials in `config.local.json`.
 
+For normal local development, the frontend does not need its own `.env.local`. The root `config.local.json` is the single setup entrypoint.
+
 ## Security Notes
 
 - Never commit `config.local.json`
 - Never commit `jarvis.db`
-- Never commit frontend `.env.local`
+- Frontend `.env.local` is not required for the default setup flow
 - Rotate any credential that was ever stored in a tracked config file
 
 ## Development Notes
