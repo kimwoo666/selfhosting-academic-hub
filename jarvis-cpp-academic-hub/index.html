@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis-Cpp Hub</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "rgba(var(--color-primary), <alpha-value>)",
+                        secondary: "rgba(var(--color-secondary), <alpha-value>)",
+                        "bg-base": "rgba(var(--color-bg-base), <alpha-value>)",
+                        "bg-surface": "rgba(var(--color-bg-surface), <alpha-value>)",
+                        "bg-highlight": "rgba(var(--color-bg-highlight), <alpha-value>)",
+                        "background-light": "rgba(var(--color-bg-light), <alpha-value>)",
+                        "background-dark": "rgba(var(--color-bg-dark), <alpha-value>)",
+                        "card-dark": "rgba(var(--color-card-dark), <alpha-value>)",
+                        "card-border": "rgba(var(--color-card-border), <alpha-value>)",
+                        "accent-blue": "rgba(var(--color-accent-blue), <alpha-value>)",
+                        "accent-orange": "rgba(var(--color-accent-orange), <alpha-value>)",
+                        "accent-amber": "rgba(var(--color-accent-amber), <alpha-value>)",
+                        "accent-purple": "rgba(var(--color-accent-purple), <alpha-value>)",
+                        "accent-emerald": "rgba(var(--color-accent-emerald), <alpha-value>)",
+                        "accent-teal": "rgba(var(--color-accent-teal), <alpha-value>)",
+                        "accent-yellow": "rgba(var(--color-accent-yellow), <alpha-value>)",
+                        "text-main": "rgba(var(--color-text-main), <alpha-value>)",
+                        "text-muted": "rgba(var(--color-text-muted), <alpha-value>)",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                    },
+                    keyframes: {
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        :root {
+            /* Light Mode Defaults */
+            --color-primary: 19, 164, 236;
+            /* #13a4ec */
+            --color-secondary: 100, 116, 139;
+            /* #64748b */
+            --color-bg-base: 248, 250, 252;
+            /* slate-50 */
+            --color-bg-surface: 255, 255, 255;
+            /* white */
+            --color-bg-highlight: 241, 245, 249;
+            /* slate-100 */
+            --color-bg-light: 246, 247, 248;
+            --color-bg-dark: 255, 255, 255;
+            /* In light mode, 'dark' bg is white/light */
+            --color-card-dark: 255, 255, 255;
+            /* In light mode, cards are white */
+            --color-card-border: 203, 213, 225;
+            /* slate-300 (darker for visibility) */
+
+            --color-text-main: 15, 23, 42;
+            /* slate-900 (Dark text) */
+            --color-text-muted: 100, 116, 139;
+            /* slate-500 */
+
+            --color-accent-blue: 59, 130, 246;
+            --color-accent-orange: 251, 146, 60;
+            --color-accent-amber: 217, 119, 6;
+            --color-accent-purple: 168, 85, 247;
+            --color-accent-emerald: 16, 185, 129;
+            --color-accent-teal: 45, 212, 191;
+            --color-accent-yellow: 251, 191, 36;
+        }
+
+        .dark {
+            /* Dark Mode Overrides - matching original hardcoded values */
+            --color-primary: 19, 164, 236;
+            --color-secondary: 100, 116, 139;
+            --color-bg-base: 24, 24, 27;
+            /* #18181b */
+            --color-bg-surface: 39, 39, 42;
+            /* #27272a */
+            --color-bg-highlight: 63, 63, 70;
+            /* #3f3f46 */
+            --color-bg-light: 246, 247, 248;
+            /* unused in dark mostly */
+            --color-bg-dark: 16, 28, 34;
+            /* #101c22 */
+            --color-card-dark: 22, 38, 46;
+            /* #16262e */
+            --color-card-border: 35, 57, 69;
+            /* #233945 */
+
+            --color-text-main: 226, 232, 240;
+            /* slate-200 (Light text) */
+            --color-text-muted: 148, 163, 184;
+            /* slate-400 */
+
+            --color-accent-blue: 59, 130, 246;
+            --color-accent-orange: 251, 146, 60;
+            --color-accent-amber: 217, 119, 6;
+            --color-accent-purple: 168, 85, 247;
+            --color-accent-emerald: 16, 185, 129;
+            --color-accent-teal: 45, 212, 191;
+            --color-accent-yellow: 251, 191, 36;
+        }
+
+        body {
+            background-color: rgba(var(--color-bg-base), 1);
+            color: rgba(var(--color-text-main), 1);
+        }
+
+        .dark body {
+            color: rgba(var(--color-text-main), 1);
+        }
+
+        /* Light mode text adjustments might be needed generally, 
+           but let's rely on utility classes (text-slate-800 vs text-slate-200) where possible. 
+           Since existing code uses hardcoded text-slate-200 in many places, 
+           we might have contrast issues in light mode unless we also swap text colors.
+           For now, we focus on the structure. */
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Custom scrollbar for other elements */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(var(--color-card-dark), 1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(var(--color-card-border), 1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334f5e;
+        }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>
