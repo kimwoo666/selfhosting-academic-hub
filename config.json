@@ -2,7 +2,7 @@
   "proxmox": {
     "host": "https://127.0.0.1:8006",
     "user": "root@pam",
-    "token_name": "jarvis",
+    "token_name": "academic-hub",
     "token_value": "CHANGE_ME",
     "node": "pve",
     "verify_ssl": false
@@ -27,7 +27,7 @@
   "server": {
     "port": 8080,
     "build_dir": "build",
-    "db_path": "jarvis.db"
+    "db_path": "academic_hub.db"
   },
   "ui": {
     "theme": "dark"

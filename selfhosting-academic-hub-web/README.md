@@ -1,6 +1,6 @@
-# Jarvis Frontend
+# Self-Hosting Academic Hub Frontend
 
-React + TypeScript frontend for the Jarvis-Cpp academic dashboard.
+React + TypeScript frontend for the Self-Hosting Academic Hub academic dashboard.
 
 ## Commands
 

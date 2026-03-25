@@ -27,7 +27,7 @@ export const Nodes: React.FC = () => {
     // Display preference: 'percent' = show % by default, hover shows absolute
     //                     'absolute' = show absolute by default, hover shows %
     const displayPref = typeof window !== 'undefined'
-        ? (localStorage.getItem('jarvis_resource_display') || 'percent')
+        ? (localStorage.getItem('academic_hub_resource_display') || 'percent')
         : 'percent';
 
     const toNumber = (v: unknown) => {
@@ -144,7 +144,7 @@ export const Nodes: React.FC = () => {
             const res = await fetch('/api/nodes/deploy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: 'jarvis-node' }),
+                body: JSON.stringify({ name: 'academic-hub-node' }),
             });
             const text = await res.text();
             let data: any = {};

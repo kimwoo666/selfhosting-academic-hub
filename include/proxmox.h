@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-// proxmox.h — Proxmox VE API client via libcurl
+// proxmox.h ??Proxmox VE API client via libcurl
 // ============================================================
 #include "nlohmann/json.hpp"
 #include "config.h"
@@ -151,7 +151,7 @@ class ProxmoxClient {
             }
             return parsed;
         } catch (...) {
-            // Proxmox sometimes returns a raw UPID string — wrap it
+            // Proxmox sometimes returns a raw UPID string ??wrap it
             if (!response_str.empty() && response_str.find("UPID:") != std::string::npos) {
                 return {{"data", response_str}};
             }
@@ -166,7 +166,7 @@ class ProxmoxClient {
 public:
     explicit ProxmoxClient(const ProxmoxConfig& cfg) : cfg_(cfg) {}
 
-    // ── Get cluster/node status ──
+    // ?? Get cluster/node status ??
     json get_node_status() {
         auto resp = api_get("/api2/json/nodes/" + cfg_.node + "/status");
         if (resp.contains("data")) {
@@ -209,7 +209,7 @@ public:
         return resp; // return error as-is
     }
 
-    // ── List all LXC containers ──
+    // ?? List all LXC containers ??
     json get_containers() {
         auto resp = api_get("/api2/json/nodes/" + cfg_.node + "/lxc");
         json result = json::array();
@@ -301,7 +301,7 @@ public:
         return buf;
     }
 
-    // ── Build /api/nodes response (for the frontend Nodes page) ──
+    // ?? Build /api/nodes response (for the frontend Nodes page) ??
     json get_nodes_for_frontend() {
         auto containers = get_containers();
         json nodes = json::array();
@@ -336,7 +336,7 @@ public:
         return nodes;
     }
 
-    // ── Build /api/summary response data (system overview) ──
+    // ?? Build /api/summary response data (system overview) ??
     json get_summary_system() {
         auto node = get_node_status();
         if (node.contains("error")) return node;
@@ -392,7 +392,7 @@ public:
         };
     }
 
-    // ── Determine if a VMID is LXC or QEMU ──
+    // ?? Determine if a VMID is LXC or QEMU ??
     std::string detect_type(int vmid) {
         // Check LXC list
         auto lxc = api_get("/api2/json/nodes/" + cfg_.node + "/lxc");
@@ -411,7 +411,7 @@ public:
         return "unknown";
     }
 
-    // ── Container control ──
+    // ?? Container control ??
     json control_container(int vmid, const std::string& action) {
         // Map frontend action names to Proxmox API action names
         std::string pve_action = action;
@@ -463,8 +463,8 @@ public:
         };
     }
 
-    // ── Deploy a new LXC node by cloning a template ──
-    json deploy_container(const std::string& base_name = "jarvis-node") {
+    // ?? Deploy a new LXC node by cloning a template ??
+    json deploy_container(const std::string& base_name = "academic-hub-node") {
         // Next VMID
         auto nextid_resp = api_get("/api2/json/cluster/nextid");
         int nextid = 0;

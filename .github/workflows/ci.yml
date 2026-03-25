@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: jarvis-cpp-academic-hub
+        working-directory: selfhosting-academic-hub-web
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: jarvis-cpp-academic-hub/package-lock.json
+          cache-dependency-path: selfhosting-academic-hub-web/package-lock.json
 
       - name: Install frontend dependencies
         run: npm ci

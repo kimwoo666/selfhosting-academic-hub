@@ -120,7 +120,7 @@ def build_config(base: dict) -> dict:
     server = config["server"]
     server["port"] = prompt_int("Backend port", int(server.get("port", 8080)))
     server["build_dir"] = prompt_text("Frontend build directory", server.get("build_dir", "build"))
-    server["db_path"] = prompt_text("SQLite DB path", server.get("db_path", "jarvis.db"))
+    server["db_path"] = prompt_text("SQLite DB path", server.get("db_path", "academic_hub.db"))
     print()
 
     print("== UI ==")

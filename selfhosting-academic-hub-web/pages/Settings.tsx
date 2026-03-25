@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export const Settings: React.FC = () => {
     const [displayPref, setDisplayPref] = useState(
         typeof window !== 'undefined'
-            ? (localStorage.getItem('jarvis_resource_display') || 'percent')
+            ? (localStorage.getItem('academic_hub_resource_display') || 'percent')
             : 'percent'
     );
     const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -27,7 +27,7 @@ export const Settings: React.FC = () => {
 
     const toggleDisplayPref = () => {
         const next = displayPref === 'percent' ? 'absolute' : 'percent';
-        localStorage.setItem('jarvis_resource_display', next);
+        localStorage.setItem('academic_hub_resource_display', next);
         setDisplayPref(next);
     };
 
@@ -75,8 +75,8 @@ export const Settings: React.FC = () => {
                                         <p className="text-sm font-medium text-slate-200">Resource Display Mode</p>
                                         <p className="text-[11px] text-slate-500 mt-0.5">
                                             {displayPref === 'absolute'
-                                                ? 'Default: used/total — Hover: percentage'
-                                                : 'Default: percentage — Hover: used/total'}
+                                                ? 'Default: used/total ??Hover: percentage'
+                                                : 'Default: percentage ??Hover: used/total'}
                                         </p>
                                     </div>
                                 </div>
@@ -131,10 +131,10 @@ export const Settings: React.FC = () => {
                     <div className="bg-card-dark border border-card-border rounded-2xl p-5 flex justify-between items-center">
                         <div className="flex items-center gap-3 text-xs text-slate-500 font-mono">
                             <span className="material-symbols-outlined text-sm text-slate-600">terminal</span>
-                            Jarvis-Cpp v4.3.0
+                            Self-Hosting Academic Hub v4.3.0
                         </div>
                         <div className="text-[10px] uppercase tracking-widest font-bold text-slate-600">
-                            Jarvis Systems
+                            Academic Hub Systems
                         </div>
                     </div>
                 </div>

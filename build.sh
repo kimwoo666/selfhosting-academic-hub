@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "============================================"
-echo " Jarvis-Cpp Build & Deploy"
+echo " Self-Hosting Academic Hub Build & Deploy"
 echo " Target: Proxmox LXC / Ubuntu 24.04"
 echo "============================================"
 echo ""
@@ -48,7 +48,7 @@ echo "  Dependencies OK"
 echo ""
 
 echo "[2/5] Building React frontend..."
-cd "$SCRIPT_DIR/jarvis-cpp-academic-hub"
+cd "$SCRIPT_DIR/selfhosting-academic-hub-web"
 if [ ! -d node_modules ]; then
     echo "  Running npm install..."
     npm install --silent
@@ -60,14 +60,14 @@ echo ""
 echo "[3/5] Copying frontend build to server directory..."
 cd "$SCRIPT_DIR"
 rm -rf build
-cp -r jarvis-cpp-academic-hub/dist build
+cp -r selfhosting-academic-hub-web/dist build
 echo "  Copied frontend bundle to ./build/"
 echo ""
 
 echo "[4/5] Building C++ server..."
 cmake -B build_cpp -S . -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -5
 cmake --build build_cpp --parallel "$(nproc)" 2>&1 | tail -10
-echo "  Server binary: build_cpp/jarvis-server"
+echo "  Server binary: build_cpp/academic-hub-server"
 echo ""
 
 echo "[5/5] Verifying config and starting server..."
@@ -86,8 +86,8 @@ fi
 
 echo "  Config file: ${CONFIG_FILE}"
 echo "  Proxmox host: $(grep -o '\"host\": \"[^\"]*\"' "${CONFIG_FILE}" | head -1)"
-echo "  SQLite DB: jarvis.db"
+echo "  SQLite DB: academic_hub.db"
 echo "  Listening on: http://0.0.0.0:8080"
 echo ""
 
-exec ./build_cpp/jarvis-server
+exec ./build_cpp/academic-hub-server

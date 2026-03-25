@@ -3,7 +3,7 @@
 ## Before You Start
 
 - Keep secrets in `config.local.json`
-- Do not commit `config.local.json`, `jarvis.db`, or frontend `.env.local`
+- Do not commit `config.local.json`, `academic_hub.db`, or frontend `.env.local`
 - Use `config.example.json` as the public template
 
 ## Local Checks
@@ -11,7 +11,7 @@
 ### Frontend
 
 ```bash
-cd jarvis-cpp-academic-hub
+cd selfhosting-academic-hub-web
 npm ci
 npm run build
 ```

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageView } from '../types';
 
 interface SummaryData {
@@ -74,7 +74,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     const [insightsUpdatedAt, setInsightsUpdatedAt] = useState('--:--:--');
 
     const displayPref = typeof window !== 'undefined'
-        ? (localStorage.getItem('jarvis_resource_display') || 'percent')
+        ? (localStorage.getItem('academic_hub_resource_display') || 'percent')
         : 'percent';
 
     const fetchSummary = () => {
@@ -408,7 +408,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                                             <button
                                                 onClick={() => {
                                                     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                                                    localStorage.setItem('jarvis_nav_date', today);
+                                                    localStorage.setItem('academic_hub_nav_date', today);
                                                     onNavigate('calendar');
                                                 }}
                                                 className="text-accent-orange text-xs font-mono border border-accent-orange/30 px-2 py-1 rounded hover:bg-accent-orange/10 transition-colors"
@@ -421,7 +421,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                                                 <div
                                                     key={idx}
                                                     onClick={() => {
-                                                        localStorage.setItem('jarvis_nav_date', item.fullDate);
+                                                        localStorage.setItem('academic_hub_nav_date', item.fullDate);
                                                         onNavigate('calendar');
                                                     }}
                                                     className={`flex flex-col items-center justify-center min-w-[3.5rem] h-16 rounded-lg border transition-colors cursor-pointer ${item.active

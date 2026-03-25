@@ -74,7 +74,7 @@ export const Alerts: React.FC = () => {
             <header className="pt-8 pb-4 px-6 flex justify-between items-center bg-background-dark/90 backdrop-blur-md sticky top-0 z-20 border-b border-card-border">
                 <div className="text-left pl-8 lg:pl-0">
                     <h2 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Notifications</h2>
-                    <h1 className="text-xl font-bold text-white leading-none">Jarvis-Cpp Alerts</h1>
+                    <h1 className="text-xl font-bold text-white leading-none">Academic Hub Alerts</h1>
                 </div>
                 <div className="flex items-center gap-2">
                     <button

@@ -59,7 +59,7 @@ export const Infrastructure: React.FC = () => {
             <header className="pt-8 pb-4 px-6 flex justify-between items-center bg-background-dark/90 backdrop-blur-md sticky top-0 z-20 border-b border-card-border">
                 <div className="text-left pl-8 lg:pl-0">
                     <h2 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-0.5">Infrastructure</h2>
-                    <h1 className="text-xl font-bold text-main leading-none">Jarvis-Cpp Control</h1>
+                    <h1 className="text-xl font-bold text-main leading-none">Academic Hub Control</h1>
                 </div>
                 <button className="p-2 -mr-2 rounded-full hover:bg-card-border transition-colors relative">
                     <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-background-dark"></span>

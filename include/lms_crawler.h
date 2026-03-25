@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 // ============================================================
 // lms_crawler.h ??SSU LMS crawler via C++ libcurl
 // Handles SSO login, course extraction, deadline discovery
@@ -303,7 +303,7 @@ public:
         }
 
         // Configure persistent session
-        cookie_file_ = "/tmp/jarvis_lms_cookies.txt";
+        cookie_file_ = "/tmp/academic_hub_lms_cookies.txt";
         curl_easy_setopt(curl_, CURLOPT_COOKIEJAR, cookie_file_.c_str());
         curl_easy_setopt(curl_, CURLOPT_COOKIEFILE, cookie_file_.c_str());
         curl_easy_setopt(curl_, CURLOPT_FOLLOWLOCATION, 1L);

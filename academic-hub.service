@@ -1,0 +1,14 @@
+[Unit]
+Description=Self-Hosting Academic Hub Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/selfhosting-academic-hub
+ExecStart=/opt/selfhosting-academic-hub/build_cpp/academic-hub-server
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target

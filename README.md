@@ -1,6 +1,6 @@
-# Jarvis-Cpp
+# Self-Hosting Academic Hub
 
-Jarvis-Cpp is a C++20 backend and React frontend for a personal academic operations dashboard focused on:
+Self-Hosting Academic Hub is a C++20 backend and React frontend for a personal academic operations dashboard focused on:
 
 - Proxmox infrastructure monitoring and control
 - Soongsil University academic integrations (`u-SAINT`, LMS, notices)
@@ -23,7 +23,7 @@ include/                     C++ headers and service modules
 src/                         Crow server entrypoint
 scripts/                     Python crawlers
 tests/                       Parser and backend smoke tests
-jarvis-cpp-academic-hub/     React frontend
+selfhosting-academic-hub-web/     React frontend
 build.sh                     End-to-end Linux build script
 config.example.json          Public config template
 config.local.json            Local-only secrets and machine settings
@@ -66,7 +66,7 @@ python scripts/setup_local_config.py --write-defaults
 ### 2. Frontend development
 
 ```bash
-cd jarvis-cpp-academic-hub
+cd selfhosting-academic-hub-web
 npm install
 npm run dev
 ```
@@ -74,7 +74,7 @@ npm run dev
 ### 3. Frontend production build
 
 ```bash
-cd jarvis-cpp-academic-hub
+cd selfhosting-academic-hub-web
 npm install
 npm run build
 ```
@@ -92,7 +92,7 @@ chmod +x build.sh
 
 The backend resolves config in this order:
 
-1. `JARVIS_CONFIG` environment variable
+1. `ACADEMIC_HUB_CONFIG` environment variable
 2. `config.local.json`
 3. `config.json`
 
@@ -103,7 +103,7 @@ For normal local development, the frontend does not need its own `.env.local`. T
 ## Security Notes
 
 - Never commit `config.local.json`
-- Never commit `jarvis.db`
+- Never commit `academic_hub.db`
 - Frontend `.env.local` is not required for the default setup flow
 - Rotate any credential that was ever stored in a tracked config file
 

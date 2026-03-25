@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PageView, NavItem } from '../types';
 
 interface SidebarProps {
@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
   { id: 'nodes', label: 'Nodes', icon: 'dns' },
   { id: 'calendar', label: 'Schedule', icon: 'calendar_today' },
-  { id: 'terminal', label: 'Jarvis', icon: 'smart_toy' },
+  { id: 'terminal', label: 'Assistant', icon: 'smart_toy' },
   { id: 'grades', label: 'Grades', icon: 'school' },
   { id: 'alerts', label: 'Alerts', icon: 'notifications_none', badge: true },
 ];
@@ -48,9 +48,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   useEffect(() => {
     const onProfileUpdated = () => loadProfile();
-    window.addEventListener('jarvis-profile-updated', onProfileUpdated);
+    window.addEventListener('academic-hub-profile-updated', onProfileUpdated);
     return () => {
-      window.removeEventListener('jarvis-profile-updated', onProfileUpdated);
+      window.removeEventListener('academic-hub-profile-updated', onProfileUpdated);
     };
   }, [loadProfile]);
 
@@ -73,13 +73,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className={`p-6 border-b border-card-border/50 flex items-center ${collapsed ? 'justify-center' : 'justify-between'} h-[73px]`}>
           {!collapsed && (
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-white whitespace-nowrap overflow-hidden">Jarvis-Cpp</h2>
+              <h2 className="text-lg font-semibold tracking-tight text-white whitespace-nowrap overflow-hidden">Self-Hosting Academic Hub</h2>
               <p className="text-xs text-slate-500 font-mono whitespace-nowrap overflow-hidden">v4.3.0</p>
               <p className="text-[10px] text-slate-600 font-mono whitespace-nowrap overflow-hidden">Proxmox LXC Runtime</p>
             </div>
           )}
           {collapsed && (
-            <span className="font-bold text-primary text-xl">JC</span>
+            <span className="font-bold text-primary text-xl">AH</span>
           )}
 
           {/* Desktop Collapse Toggle */}

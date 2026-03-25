@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(jarvis-server LANGUAGES CXX)
+project(academic-hub-server LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,14 +10,14 @@ enable_testing()
 # ============================================================
 include(FetchContent)
 
-# Crow — REST + WebSocket framework (header-only)
+# Crow ??REST + WebSocket framework (header-only)
 FetchContent_Declare(
     crow
     GIT_REPOSITORY https://github.com/CrowCpp/Crow.git
     GIT_TAG        v1.2.0
 )
 
-# nlohmann/json — JSON for Modern C++ (header-only)
+# nlohmann/json ??JSON for Modern C++ (header-only)
 FetchContent_Declare(
     json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -34,15 +34,15 @@ find_package(SQLite3 REQUIRED)
 # ============================================================
 # Target
 # ============================================================
-add_executable(jarvis-server
+add_executable(academic-hub-server
     src/main.cpp
 )
 
-target_include_directories(jarvis-server PRIVATE
+target_include_directories(academic-hub-server PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(jarvis-server PRIVATE
+target_link_libraries(academic-hub-server PRIVATE
     Crow::Crow
     nlohmann_json::nlohmann_json
     Threads::Threads
@@ -50,7 +50,7 @@ target_link_libraries(jarvis-server PRIVATE
     SQLite::SQLite3
 )
 
-target_compile_definitions(jarvis-server PRIVATE
+target_compile_definitions(academic-hub-server PRIVATE
     CROW_ENFORCE_WS_SPEC
 )
 

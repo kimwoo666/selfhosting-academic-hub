@@ -1,4 +1,4 @@
-
+﻿
 import sys
 import json
 import time
@@ -328,7 +328,7 @@ def main():
 
         # Close popups (generic)
         try:
-            close_btns = driver.find_elements(By.XPATH, "//*[contains(text(), '닫기') or contains(text(), 'Close')]")
+            close_btns = driver.find_elements(By.XPATH, "//*[contains(text(), '??る┛') or contains(text(), 'Close')]")
             for btn in close_btns:
                 if btn.is_displayed():
                     try: btn.click(); time.sleep(0.5);
@@ -341,8 +341,8 @@ def main():
             driver.switch_to.default_content()
             
             time.sleep(2)
-            # Try finding generic top menu items via JS click (Academics)
-            if not js_click_text_debug(driver, "학사관리"):
+            # Try finding generic top menu items via JS click.
+            if not js_click_text_debug(driver, "\ud559\uc0ac\uad00\ub9ac"):
                 if not js_click_text_debug(driver, "Student Information"):
                     # Structural fallback: 3rd Main Menu Item?
                     # Too risky without specific IDs. Assume text fix works with Headless Standard.
@@ -350,11 +350,11 @@ def main():
                     pass
 
             time.sleep(2)
-            if not js_click_text_debug(driver, "성적/졸업"):
+            if not js_click_text_debug(driver, "\uc131\uc801/\uc878\uc5c5"):
                 js_click_text_debug(driver, "Grade/Graduation")
             
             time.sleep(2)
-            if not js_click_text_debug(driver, "학기별성적조회"):
+            if not js_click_text_debug(driver, "\ud559\uae30\ubcc4\uc131\uc801\uc870\ud68c"):
                 js_click_text_debug(driver, "Semester Grade")
             
         except Exception as e:
@@ -373,13 +373,13 @@ def main():
             for frame in frames:
                 try:
                     driver.switch_to.frame(frame)
-                    if len(driver.find_elements(By.XPATH, "//*[contains(text(), '평점') or contains(text(), 'GPA')]")) > 0:
+                    if len(driver.find_elements(By.XPATH, "//*[contains(text(), '??깆젎') or contains(text(), 'GPA')]")) > 0:
                         return True
                     # Nested check
                     subframes = driver.find_elements(By.TAG_NAME, "iframe")
                     for sub in subframes:
                         driver.switch_to.frame(sub)
-                        if len(driver.find_elements(By.XPATH, "//*[contains(text(), '평점') or contains(text(), 'GPA')]")) > 0:
+                        if len(driver.find_elements(By.XPATH, "//*[contains(text(), '??깆젎') or contains(text(), 'GPA')]")) > 0:
                             return True
                         driver.switch_to.parent_frame()
                     driver.switch_to.default_content()
@@ -424,12 +424,34 @@ def main():
                         values = [clean_text(col.text) for col in row.find_elements(By.TAG_NAME, "td")]
                         if len(values) < 6:
                             continue
+                        """
                         if (
-                            "과목명" in values
-                            and "과목코드" in values
-                            and "과목학점" in values
-                            and "등급" in values
+                            "?⑥눖?됵쭗? in values
+                            and "?⑥눖?됭굜遺얜굡" in values
+                            and "?⑥눖???덉젎" in values
+                            and "?源껎닋" in values
                         ):
+                            header_score = 5
+                            continue
+                        """
+                        normalized_values = {value.lower() for value in values if value}
+                        header_matches = {
+                            "\uacfc\ubaa9\ucf54\ub4dc",
+                            "\uad50\uacfc\ubaa9\ucf54\ub4dc",
+                            "\uad50\uacfc\ubaa9\ubc88\ud638",
+                            "\uad50\uacfc\ubaa9\uba85",
+                            "\uacfc\ubaa9\uba85",
+                            "\ud559\uc810",
+                            "\ub4f1\uae09",
+                            "\uad50\uc218\uba85",
+                            "\uad50\uc6d0\uba85",
+                            "course code",
+                            "course name",
+                            "credits",
+                            "grade",
+                            "professor",
+                        }.intersection(normalized_values)
+                        if len(header_matches) >= 3:
                             header_score = 5
                             continue
                         has_grade = any(looks_like_grade(value) for value in values)
@@ -503,7 +525,7 @@ def main():
                     }
 
                     log_debug(f"Processing {year}-{sem}...")
-                    debug_dir = os.environ.get("JARVIS_GRADE_DEBUG_DIR", "")
+                    debug_dir = os.environ.get("ACADEMIC_HUB_GRADE_DEBUG_DIR", "")
                     write_debug_artifact(debug_dir, f"{year}_{sem}_summary_row", "html", row.get_attribute("outerHTML"))
                     dump_visible_controls(driver, debug_dir, f"{year}_{sem}_before")
 
@@ -516,9 +538,9 @@ def main():
                             pass
 
                     time.sleep(1)
-                    clicked_refresh = js_click_control_text(driver, "조회(새로고침)")
+                    clicked_refresh = js_click_control_text(driver, "\uc870\ud68c(\uc0c8\ub85c\uace0\uce68)")
                     if not clicked_refresh:
-                        clicked_refresh = js_click_control_text(driver, "새로고침")
+                        clicked_refresh = js_click_control_text(driver, "\uc870\ud68c")
                     log_debug(f"Refresh button clicked for {year}-{sem}: {clicked_refresh}")
 
                     time.sleep(3)
@@ -537,18 +559,57 @@ def main():
                             values = [clean_text(col.text) for col in d_row.find_elements(By.TAG_NAME, "td")]
                             if not values:
                                 continue
+                            """
                             if (
                                 len(values) == 8
-                                and values[:8] == ["성적", "등급", "과목명", "상세성적", "과목학점", "교수명", "비고", "과목코드"]
+                                and values[:8] == ["?源놁읅", "?源껎닋", "?⑥눖?됵쭗?, "?怨멸쉭?源놁읅", "?⑥눖???덉젎", "?대Ŋ?뷂쭗?, "??쑨??, "?⑥눖?됭굜遺얜굡"]
                             ):
                                 header_map = {value: idx for idx, value in enumerate(values)}
                                 break
 
-                        code_idx = header_map.get("과목코드")
-                        name_idx = header_map.get("과목명")
-                        credits_idx = header_map.get("과목학점")
-                        grade_idx = header_map.get("등급")
-                        prof_idx = header_map.get("교수명")
+                        code_idx = header_map.get("?⑥눖?됭굜遺얜굡")
+                        name_idx = header_map.get("?⑥눖?됵쭗?)
+                        credits_idx = header_map.get("?⑥눖???덉젎")
+                        grade_idx = header_map.get("?源껎닋")
+                        prof_idx = header_map.get("?대Ŋ?뷂쭗?)
+                        """
+
+                        normalized_header_map = {}
+                        header_alias_groups = (
+                            ("\uacfc\ubaa9\ucf54\ub4dc", "\uad50\uacfc\ubaa9\ucf54\ub4dc", "\uad50\uacfc\ubaa9\ubc88\ud638", "course code"),
+                            ("\uacfc\ubaa9\uba85", "\uad50\uacfc\ubaa9\uba85", "course name"),
+                            ("\ud559\uc810", "credits"),
+                            ("\ub4f1\uae09", "grade"),
+                            ("\uad50\uc218\uba85", "\uad50\uc6d0\uba85", "professor"),
+                        )
+
+                        for d_row in d_rows:
+                            values = [clean_text(col.text) for col in d_row.find_elements(By.TAG_NAME, "td")]
+                            if not values:
+                                continue
+
+                            candidate_map = {value.lower(): idx for idx, value in enumerate(values) if value}
+                            match_count = 0
+                            for aliases in header_alias_groups:
+                                if any(alias in candidate_map for alias in aliases):
+                                    match_count += 1
+
+                            if match_count >= 4:
+                                normalized_header_map = candidate_map
+                                break
+
+                        def find_header_index(*aliases):
+                            for alias in aliases:
+                                idx = normalized_header_map.get(alias)
+                                if idx is not None:
+                                    return idx
+                            return None
+
+                        code_idx = find_header_index("\uacfc\ubaa9\ucf54\ub4dc", "\uad50\uacfc\ubaa9\ucf54\ub4dc", "\uad50\uacfc\ubaa9\ubc88\ud638", "course code")
+                        name_idx = find_header_index("\uacfc\ubaa9\uba85", "\uad50\uacfc\ubaa9\uba85", "course name")
+                        credits_idx = find_header_index("\ud559\uc810", "credits")
+                        grade_idx = find_header_index("\ub4f1\uae09", "grade")
+                        prof_idx = find_header_index("\uad50\uc218\uba85", "\uad50\uc6d0\uba85", "professor")
                         seen_courses = set()
 
                         for d_row in d_rows:
@@ -559,13 +620,13 @@ def main():
                             values = [clean_text(col.text) for col in d_cols]
                             if not values or len(values) > 10:
                                 continue
-                            if values == list(header_map.keys()):
-                                continue
-                            if any(value in {"성적", "등급", "과목명", "상세성적", "과목학점", "교수명", "비고", "과목코드"} for value in values):
+
+                            normalized_values = [value.lower() for value in values if value]
+                            if normalized_header_map and set(normalized_header_map.keys()).issubset(set(normalized_values)):
                                 continue
 
                             offset = 0
-                            if header_map and len(values) == len(header_map) + 1 and values[0] == "":
+                            if normalized_header_map and len(values) == len(normalized_header_map) + 1 and values[0] == "":
                                 offset = 1
 
                             code = values[offset + code_idx] if code_idx is not None and len(values) > offset + code_idx else ""
@@ -656,3 +717,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

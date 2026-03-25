@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 // ============================================================
 // gemini.h -- Google Gemini API client via libcurl
 // ============================================================
@@ -87,7 +87,7 @@ public:
 
     std::string terminal_chat(const std::string& user_message) {
         return chat(
-            "You are Jarvis, an AI assistant running inside a Proxmox LXC container. "
+            "You are the Self-Hosting Academic Hub assistant running inside a Proxmox LXC container. "
             "You manage infrastructure, monitor system resources, and help with academic tasks. "
             "IMPORTANT RULES:\n"
             "1. ALWAYS respond in English, regardless of the input language.\n"
@@ -96,7 +96,7 @@ public:
             "3. Keep responses concise, structured, and actionable.\n"
             "4. Use headers (## Section) to organize longer responses.\n"
             "5. When asked about system status, provide realistic Proxmox/Linux context.\n"
-            "6. Sign off responses with a brief status line like: `[Jarvis :: Online]`",
+            "6. Sign off responses with a brief status line like: `[Academic Hub :: Online]`",
             user_message
         );
     }
@@ -107,7 +107,7 @@ public:
                            "containing 'level' (success/info/warning) and 'message' fields. "
                            "System data: " + system_data.dump();
         return chat(
-            "You are Jarvis infrastructure analysis AI. Return ONLY valid JSON, no markdown fences.",
+            "You are Academic Hub infrastructure analysis AI. Return ONLY valid JSON, no markdown fences.",
             prompt
         );
     }

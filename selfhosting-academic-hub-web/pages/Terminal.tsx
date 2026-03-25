@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface Message {
-    sender: 'operator' | 'jarvis';
+    sender: 'operator' | 'assistant';
     time: string;
     message: string;
     processing_time_ms?: number;
     tokens?: number;
 }
 
-// Lightweight markdown → HTML converter for terminal messages
+// Lightweight markdown-to-HTML converter for terminal messages
 function renderMarkdown(text: string): string {
     if (!text) return '';
     let html = text
@@ -29,10 +29,10 @@ function renderMarkdown(text: string): string {
     html = html.replace(/^### (.+)$/gm, '<div class="text-sm font-bold text-primary mt-3 mb-1">$1</div>');
     html = html.replace(/^## (.+)$/gm, '<div class="text-sm font-bold text-accent-orange mt-3 mb-1">$1</div>');
     // Bullet lists: - item
-    html = html.replace(/^- (.+)$/gm, '<div class="flex gap-2 ml-2"><span class="text-primary flex-none">▸</span><span>$1</span></div>');
+    html = html.replace(/^- (.+)$/gm, '<div class="flex gap-2 ml-2"><span class="text-primary flex-none">&bull;</span><span>$1</span></div>');
     // Numbered lists
     html = html.replace(/^(\d+)\. (.+)$/gm, '<div class="flex gap-2 ml-2"><span class="text-primary flex-none">$1.</span><span>$2</span></div>');
-    // Newlines → <br>
+    // Newlines to <br>
     html = html.replace(/\n/g, '<br/>');
 
     return html;
@@ -111,23 +111,23 @@ export const Terminal: React.FC = () => {
             <main className="flex-1 overflow-y-auto px-5 py-4 space-y-4 font-mono text-sm" onClick={() => inputRef.current?.focus()}>
                 {messages.map((msg, idx) => (
                     <div key={idx} className={`flex gap-3 ${msg.sender === 'operator' ? 'justify-end' : ''}`}>
-                        {msg.sender === 'jarvis' && (
+                        {msg.sender === 'assistant' && (
                             <div className="flex-none w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mt-1">
-                                <span className="text-primary text-xs font-bold">J</span>
+                                <span className="text-primary text-xs font-bold">A</span>
                             </div>
                         )}
                         <div className={`${msg.sender === 'operator'
                             ? 'bg-primary/10 border-primary/20 max-w-[70%]'
                             : 'bg-card-dark border-card-border max-w-[85%]'
                             } border rounded-xl px-4 py-3 relative overflow-hidden`}>
-                            {msg.sender === 'jarvis' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>}
+                            {msg.sender === 'assistant' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>}
                             <div className="flex justify-between items-center mb-2">
-                                <span className={`text-[10px] uppercase tracking-widest font-bold ${msg.sender === 'jarvis' ? 'text-primary' : 'text-slate-400'}`}>
-                                    {msg.sender === 'jarvis' ? 'JARVIS' : 'OPERATOR'}
+                                <span className={`text-[10px] uppercase tracking-widest font-bold ${msg.sender === 'assistant' ? 'text-primary' : 'text-slate-400'}`}>
+                                    {msg.sender === 'assistant' ? 'ASSISTANT' : 'OPERATOR'}
                                 </span>
                                 <span className="text-[10px] text-slate-600 font-mono">{msg.time}</span>
                             </div>
-                            {msg.sender === 'jarvis' ? (
+                            {msg.sender === 'assistant' ? (
                                 <div className="text-sm text-slate-300 leading-relaxed terminal-markdown"
                                     dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.message) }} />
                             ) : (
@@ -151,7 +151,7 @@ export const Terminal: React.FC = () => {
                 {isThinking && (
                     <div className="flex gap-3">
                         <div className="flex-none w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center mt-1">
-                            <span className="text-primary text-xs font-bold">J</span>
+                            <span className="text-primary text-xs font-bold">A</span>
                         </div>
                         <div className="bg-card-dark border border-card-border rounded-xl px-4 py-3">
                             <div className="flex gap-1 items-center">
@@ -169,14 +169,14 @@ export const Terminal: React.FC = () => {
 
             <footer className="flex-none px-5 py-4 bg-card-dark/50 backdrop-blur-md border-t border-card-border/50">
                 <div className="flex items-center gap-3">
-                    <span className="text-primary font-mono text-sm font-bold">▸</span>
+                    <span className="text-primary font-mono text-sm font-bold">&gt;</span>
                     <input
                         ref={inputRef}
                         type="text"
                         value={input}
                         onChange={e => setInput(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && send()}
-                        placeholder="Enter command or ask Jarvis..."
+                        placeholder="Enter command or ask the assistant..."
                         disabled={!connected}
                         className="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-600 focus:outline-none font-mono disabled:opacity-40"
                     />

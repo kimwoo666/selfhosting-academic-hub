@@ -17,8 +17,8 @@ indent_size = 2
 [*.sh]
 indent_size = 4
 
-[jarvis-cpp-academic-hub/*.ts]
+[selfhosting-academic-hub-web/*.ts]
 indent_size = 4
 
-[jarvis-cpp-academic-hub/*.tsx]
+[selfhosting-academic-hub-web/*.tsx]
 indent_size = 4

@@ -1,6 +1,6 @@
-# Jarvis-Cpp Deployment Tutorial
+# Self-Hosting Academic Hub Deployment Tutorial
 
-This guide covers a clean deployment of Jarvis-Cpp on a Proxmox LXC container running Ubuntu 24.04.
+This guide covers a clean deployment of Self-Hosting Academic Hub on a Proxmox LXC container running Ubuntu 24.04.
 
 ## 1. Create the LXC
 
@@ -18,7 +18,7 @@ Example on the Proxmox host:
 pveam download local ubuntu-24.04-standard_24.04-2_amd64.tar.zst
 
 pct create 200 local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst \
-  --hostname jarvis \
+  --hostname academic-hub \
   --cores 2 \
   --memory 2048 \
   --rootfs local-lvm:8 \
@@ -31,7 +31,7 @@ pct create 200 local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst \
 Example:
 
 ```bash
-pveum user token add root@pam jarvis --privsep=0
+pveum user token add root@pam academic-hub --privsep=0
 ```
 
 Store the token securely in `config.local.json`. Do not place live credentials in `config.json`.
@@ -41,7 +41,7 @@ Store the token securely in `config.local.json`. Do not place live credentials i
 Example from a local machine:
 
 ```bash
-scp -r /path/to/jarvis root@<LXC_IP>:/opt/jarvis
+scp -r /path/to/selfhosting-academic-hub root@<LXC_IP>:/opt/selfhosting-academic-hub
 ```
 
 ## 4. Prepare the Local Config
@@ -49,7 +49,7 @@ scp -r /path/to/jarvis root@<LXC_IP>:/opt/jarvis
 Inside the container:
 
 ```bash
-cd /opt/jarvis
+cd /opt/selfhosting-academic-hub
 cp config.example.json config.local.json
 ```
 
@@ -62,7 +62,7 @@ Fill in:
 ## 5. Run the Full Build
 
 ```bash
-cd /opt/jarvis
+cd /opt/selfhosting-academic-hub
 chmod +x build.sh
 ./build.sh
 ```
@@ -74,18 +74,18 @@ What this does:
 - builds the React frontend
 - copies the bundle into `build/`
 - configures and builds the C++ backend
-- starts `build_cpp/jarvis-server`
+- starts `build_cpp/academic-hub-server`
 
 ## 6. Run as a Service
 
 Example:
 
 ```bash
-cp jarvis.service /etc/systemd/system/jarvis.service
+cp academic-hub.service /etc/systemd/system/academic-hub.service
 systemctl daemon-reload
-systemctl enable jarvis
-systemctl start jarvis
-systemctl status jarvis
+systemctl enable academic-hub
+systemctl start academic-hub
+systemctl status academic-hub
 ```
 
 ## 7. Post-Deploy Checklist
@@ -99,7 +99,7 @@ systemctl status jarvis
 ## 8. Operational Notes
 
 - The backend resolves config in this order:
-  1. `JARVIS_CONFIG`
+  1. `ACADEMIC_HUB_CONFIG`
   2. `config.local.json`
   3. `config.json`
 - `u-SAINT` crawling depends on live page structure and may require selector updates over time

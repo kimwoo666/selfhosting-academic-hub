@@ -6,7 +6,7 @@
 int main() {
     namespace fs = std::filesystem;
 
-    const fs::path temp_dir = fs::temp_directory_path() / "jarvis_database_smoke";
+    const fs::path temp_dir = fs::temp_directory_path() / "academic_hub_database_smoke";
     const fs::path db_path = temp_dir / "smoke.db";
     fs::create_directories(temp_dir);
     fs::remove(db_path);

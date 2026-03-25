@@ -1,12 +1,12 @@
 build/
 build_cpp/
-jarvis.db
+academic_hub.db
 *.db-shm
 *.db-wal
 config.local.json
-jarvis-cpp-academic-hub/node_modules/
-jarvis-cpp-academic-hub/dist/
-jarvis-cpp-academic-hub/.env.local
+selfhosting-academic-hub-web/node_modules/
+selfhosting-academic-hub-web/dist/
+selfhosting-academic-hub-web/.env.local
 __pycache__/
 scripts/__pycache__/
 debug_*.html

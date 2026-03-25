@@ -1,5 +1,5 @@
-﻿// ============================================================
-// Jarvis-Cpp: Proxmox-Native AI Orchestrator - C++ Backend
+// ============================================================
+// Self-Hosting Academic Hub: Proxmox-Native AI Orchestrator - C++ Backend
 // Target: Proxmox LXC (Ubuntu 24.04), C++20
 // Phase 5: SSU Academic Integration ??Notice crawling,
 //          LMS sync, Google Calendar write, LLM analysis
@@ -8,7 +8,7 @@
 #include "crow.h"
 #include "nlohmann/json.hpp"
 
-// Jarvis modules
+// Academic hub modules
 #include "config.h"
 #include "database.h"
 #include "gemini.h"
@@ -84,7 +84,7 @@ static std::string today_date() {
 // MAIN
 // ============================================================
 int main() {
-    // ?? Load config ??
+    // ???? Load config ????
     AppConfig cfg;
     std::string config_path;
     try {
@@ -103,7 +103,7 @@ int main() {
         return 1;
     }
 
-    // ?? Initialize services ??
+    // ???? Initialize services ????
     Database db(cfg.server.db_path);
     CROW_LOG_INFO << "SQLite database: " << cfg.server.db_path;
 
@@ -296,7 +296,7 @@ int main() {
     // ----------------------------------------------------------
     CROW_ROUTE(app, "/api/nodes/deploy").methods("POST"_method)
     ([&](const crow::request& req) {
-        std::string base_name = "jarvis-node";
+        std::string base_name = "academic-hub-node";
         if (!req.body.empty()) {
             try {
                 auto body = json::parse(req.body);
@@ -903,7 +903,7 @@ int main() {
                     };
                 }
 
-                std::string msg = "LMS 로그인 성공. 과목 및 일정이 동기화되었습니다.";
+                std::string msg = "LMS 濡쒓렇???깃났. 怨쇰ぉ 諛??쇱젙???숆린?붾릺?덉뒿?덈떎.";
                 if (grade_sync.value("success", false)) {
                     msg += " SAINT grades (Current GPA, Class Rank) were synced.";
                 } else {
@@ -923,7 +923,7 @@ int main() {
             } else {
                 return json_response({
                     {"success", false},
-                    {"message", "SSO 로그인 실패. 학번과 비밀번호를 확인해주세요."}
+                    {"message", "SSO 濡쒓렇???ㅽ뙣. ?숇쾲怨?鍮꾨?踰덊샇瑜??뺤씤?댁＜?몄슂."}
                 });
             }
         } catch (const std::exception& e) {
@@ -1051,7 +1051,7 @@ int main() {
         .onopen([&](crow::websocket::connection& conn) {
             CROW_LOG_INFO << "WebSocket connected";
             json welcome = {
-                {"sender", "jarvis"},
+                {"sender", "academic-hub"},
                 {"time", "now"},
                 {"message", "System initialized. Neural interface online.\n"
                             "Connected to Proxmox node: " + cfg.proxmox.node + "\n"
@@ -1080,7 +1080,7 @@ int main() {
             auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
             json response = {
-                {"sender", "jarvis"},
+                {"sender", "academic-hub"},
                 {"time", "now"},
                 {"message", ai_response},
                 {"processing_time_ms", ms},
@@ -1133,7 +1133,7 @@ int main() {
     // Start
     // ----------------------------------------------------------
     CROW_LOG_INFO << "============================================";
-    CROW_LOG_INFO << " Jarvis-Cpp Server ??Phase 5 (SSU Academic)";
+    CROW_LOG_INFO << " Self-Hosting Academic Hub Server ??Phase 5 (SSU Academic)";
     CROW_LOG_INFO << " Target: Proxmox LXC (Ubuntu 24.04)";
     CROW_LOG_INFO << " Port: " << cfg.server.port;
     CROW_LOG_INFO << " SQLite: " << cfg.server.db_path;

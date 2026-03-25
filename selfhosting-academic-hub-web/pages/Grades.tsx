@@ -393,7 +393,7 @@ export const Grades: React.FC = () => {
                         </button>
                     </form>
                     <p className="text-[11px] text-muted/50 max-w-sm text-center leading-relaxed">
-                        Credentials are sent to the local Jarvis backend only to run the u-SAINT crawler for this sync.
+                        Credentials are sent to the local Academic Hub backend only to run the u-SAINT crawler for this sync.
                     </p>
                 </div>
             ) : (
@@ -449,7 +449,7 @@ export const Grades: React.FC = () => {
                                                     <div className={`w-8 h-8 rounded bg-${gradeColor(course.color)}/20 text-${gradeColor(course.color)} flex items-center justify-center font-bold text-sm`}>{course.code}</div>
                                                     <div>
                                                         <p className="text-sm font-semibold text-main">{course.name}</p>
-                                                        <p className="text-[10px] font-mono text-muted">{course.full_code} · {course.professor}</p>
+                                                        <p className="text-[10px] font-mono text-muted">{course.full_code} 쨌 {course.professor}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col items-end">
@@ -588,7 +588,7 @@ export const Grades: React.FC = () => {
                         <div className="px-6 py-4 border-b border-card-border flex justify-between items-center bg-card-dark/50">
                             <div>
                                 <h3 className="text-lg font-bold text-main">{selectedCourse.name}</h3>
-                                <p className="text-xs text-muted font-mono">{selectedCourse.full_code} · {selectedCourse.professor}</p>
+                                <p className="text-xs text-muted font-mono">{selectedCourse.full_code} 쨌 {selectedCourse.professor}</p>
                             </div>
                             <button onClick={() => setSelectedCourse(null)} className="text-muted hover:text-white transition-colors">
                                 <span className="material-icons">close</span>

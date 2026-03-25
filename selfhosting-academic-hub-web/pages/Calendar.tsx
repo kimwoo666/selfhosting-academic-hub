@@ -26,7 +26,7 @@ interface MonthData {
     google_dates: string[];
 }
 
-// ── Daily Donut Chart Component ──
+// ?? Daily Donut Chart Component ??
 const DailyDonut: React.FC<{ events: CalendarEvent[] }> = ({ events }) => {
     const r = 56, cx = 75, cy = 75;
     const circumference = 2 * Math.PI * r;
@@ -131,9 +131,9 @@ export const Calendar: React.FC = () => {
     const now = new Date();
 
     // Check if a specific date was requested (e.g., from Dashboard calendar click)
-    const navDate = typeof window !== 'undefined' ? localStorage.getItem('jarvis_nav_date') : null;
+    const navDate = typeof window !== 'undefined' ? localStorage.getItem('academic_hub_nav_date') : null;
     const initDate = navDate ? new Date(navDate + 'T00:00:00') : now;
-    if (navDate) localStorage.removeItem('jarvis_nav_date');
+    if (navDate) localStorage.removeItem('academic_hub_nav_date');
 
     const [year, setYear] = useState(initDate.getFullYear());
     const [month, setMonth] = useState(initDate.getMonth() + 1);
@@ -345,7 +345,7 @@ export const Calendar: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* Daily Donut Chart — inside sidebar */}
+                    {/* Daily Donut Chart ??inside sidebar */}
                     {events.length > 0 && (
                         <div className="hidden lg:block px-4 pb-4">
                             <DailyDonut events={events} />
@@ -401,7 +401,7 @@ export const Calendar: React.FC = () => {
                                             <div className="flex justify-between items-start mb-1.5">
                                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${event.done ? 'bg-card-dark text-muted flex items-center gap-1' : isGoogle ? 'bg-blue-500/10 text-blue-400' : `bg-${tc}/10 text-${tc}`}`}>
                                                     {event.done && <span className="material-symbols-outlined text-[10px]">check</span>}
-                                                    {event.done ? 'Done' : isGoogle ? '📅 Google' : event.type}
+                                                    {event.done ? 'Done' : isGoogle ? '?뱟 Google' : event.type}
                                                 </span>
                                                 <div className="flex items-center gap-1">
                                                     {!isGoogle && event.id && (

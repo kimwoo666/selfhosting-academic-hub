@@ -21,5 +21,5 @@ If you find a vulnerability, report it privately to the project owner and rotate
 - Store live secrets only in `config.local.json`
 - Do not commit `config.local.json`
 - Do not commit `.env.local`
-- Do not commit `jarvis.db`
+- Do not commit `academic_hub.db`
 - Rotate credentials that were ever placed in a tracked config file

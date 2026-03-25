@@ -1,6 +1,6 @@
 #pragma once
 // ============================================================
-// config.h — Load config.json at startup
+// config.h ??Load config.json at startup
 // ============================================================
 #include "nlohmann/json.hpp"
 #include "google_calendar.h"
@@ -14,8 +14,8 @@ using json = nlohmann::json;
 
 struct ProxmoxConfig {
     std::string host;        // e.g. "https://192.168.1.1:8006"
-    std::string user;        // e.g. "jarvis@pam"
-    std::string token_name;  // e.g. "jarvis"
+    std::string user;        // e.g. "academic-hub@pam"
+    std::string token_name;  // e.g. "academic-hub"
     std::string token_value; // UUID token
     std::string node;        // e.g. "pve"
     bool verify_ssl = false;
@@ -35,7 +35,7 @@ struct LmsConfig {
 struct ServerConfig {
     int port = 8080;
     std::string build_dir = "build";
-    std::string db_path = "jarvis.db";
+    std::string db_path = "academic_hub.db";
 };
 
 struct UiConfig {
@@ -54,7 +54,7 @@ struct AppConfig {
 inline std::string resolve_config_path(const std::string& preferred_path = "config.json") {
     namespace fs = std::filesystem;
 
-    if (const char* env_path = std::getenv("JARVIS_CONFIG")) {
+    if (const char* env_path = std::getenv("ACADEMIC_HUB_CONFIG")) {
         if (*env_path) {
             return env_path;
         }
@@ -74,7 +74,7 @@ inline std::string resolve_config_path(const std::string& preferred_path = "conf
 
     throw std::runtime_error(
         "No config file found. Copy config.example.json to config.local.json "
-        "or set JARVIS_CONFIG to an explicit path."
+        "or set ACADEMIC_HUB_CONFIG to an explicit path."
     );
 }
 
@@ -90,8 +90,8 @@ inline AppConfig load_config(const std::string& path = "config.json") {
     // Proxmox
     auto& px = j["proxmox"];
     cfg.proxmox.host        = px.value("host", "https://127.0.0.1:8006");
-    cfg.proxmox.user        = px.value("user", "jarvis@pam");
-    cfg.proxmox.token_name  = px.value("token_name", "jarvis");
+    cfg.proxmox.user        = px.value("user", "academic-hub@pam");
+    cfg.proxmox.token_name  = px.value("token_name", "academic-hub");
     cfg.proxmox.token_value = px.value("token_value", "");
     cfg.proxmox.node        = px.value("node", "pve");
     cfg.proxmox.verify_ssl  = px.value("verify_ssl", false);
@@ -124,7 +124,7 @@ inline AppConfig load_config(const std::string& path = "config.json") {
     auto& sv = j["server"];
     cfg.server.port      = sv.value("port", 8080);
     cfg.server.build_dir = sv.value("build_dir", "build");
-    cfg.server.db_path   = sv.value("db_path", "jarvis.db");
+    cfg.server.db_path   = sv.value("db_path", "academic_hub.db");
 
     // UI
     if (j.contains("ui")) {

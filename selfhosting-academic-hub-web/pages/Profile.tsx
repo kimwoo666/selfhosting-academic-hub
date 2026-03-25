@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ProfileData {
     name: string;
@@ -88,7 +88,7 @@ export const Profile: React.FC = () => {
                 setEditing(false);
                 fetchProfile();
                 if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new Event('jarvis-profile-updated'));
+                    window.dispatchEvent(new Event('academic-hub-profile-updated'));
                 }
             } else {
                 setSaveMsg('Failed to save profile');
@@ -373,7 +373,7 @@ export const Profile: React.FC = () => {
                             {profile.version}
                         </div>
                         <div className="text-[10px] uppercase tracking-widest font-bold text-slate-600">
-                            Jarvis Systems
+                            Academic Hub Systems
                         </div>
                     </div>
                 </div>
