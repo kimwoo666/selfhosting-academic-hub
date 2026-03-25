@@ -162,6 +162,15 @@ public:
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             );
 
+            CREATE TABLE IF NOT EXISTS notice_sources (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                url TEXT NOT NULL,
+                title_selector TEXT NOT NULL,
+                enabled INTEGER DEFAULT 1,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+
             CREATE TABLE IF NOT EXISTS lms_courses (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 lms_id TEXT UNIQUE,
@@ -898,6 +907,79 @@ public:
         }
         sqlite3_finalize(stmt);
         return result;
+    }
+
+    json get_notice_sources(bool enabled_only = false) {
+        json result = json::array();
+        sqlite3_stmt* stmt;
+
+        const char* sql = enabled_only
+            ? "SELECT id, name, url, title_selector, enabled, created_at "
+              "FROM notice_sources WHERE enabled = 1 ORDER BY created_at DESC, id DESC"
+            : "SELECT id, name, url, title_selector, enabled, created_at "
+              "FROM notice_sources ORDER BY created_at DESC, id DESC";
+
+        sqlite3_prepare_v2(db_, sql, -1, &stmt, nullptr);
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            result.push_back({
+                {"id", sqlite3_column_int(stmt, 0)},
+                {"name", sqlite3_column_text(stmt, 1) ? (const char*)sqlite3_column_text(stmt, 1) : ""},
+                {"url", sqlite3_column_text(stmt, 2) ? (const char*)sqlite3_column_text(stmt, 2) : ""},
+                {"title_selector", sqlite3_column_text(stmt, 3) ? (const char*)sqlite3_column_text(stmt, 3) : ""},
+                {"enabled", sqlite3_column_int(stmt, 4) != 0},
+                {"created_at", sqlite3_column_text(stmt, 5) ? (const char*)sqlite3_column_text(stmt, 5) : ""}
+            });
+        }
+        sqlite3_finalize(stmt);
+        return result;
+    }
+
+    int add_notice_source(const std::string& name, const std::string& url,
+                          const std::string& title_selector, bool enabled = true) {
+        sqlite3_stmt* stmt;
+        sqlite3_prepare_v2(
+            db_,
+            "INSERT INTO notice_sources (name, url, title_selector, enabled) VALUES (?, ?, ?, ?)",
+            -1, &stmt, nullptr
+        );
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, url.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, title_selector.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 4, enabled ? 1 : 0);
+
+        int rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        if (rc != SQLITE_DONE) {
+            throw std::runtime_error("Failed to insert notice source");
+        }
+        return static_cast<int>(sqlite3_last_insert_rowid(db_));
+    }
+
+    bool update_notice_source(int id, const std::string& name, const std::string& url,
+                              const std::string& title_selector, bool enabled) {
+        sqlite3_stmt* stmt;
+        sqlite3_prepare_v2(
+            db_,
+            "UPDATE notice_sources SET name = ?, url = ?, title_selector = ?, enabled = ? WHERE id = ?",
+            -1, &stmt, nullptr
+        );
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 2, url.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt, 3, title_selector.c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 4, enabled ? 1 : 0);
+        sqlite3_bind_int(stmt, 5, id);
+        int rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        return rc == SQLITE_DONE && sqlite3_changes(db_) > 0;
+    }
+
+    bool delete_notice_source(int id) {
+        sqlite3_stmt* stmt;
+        sqlite3_prepare_v2(db_, "DELETE FROM notice_sources WHERE id = ?", -1, &stmt, nullptr);
+        sqlite3_bind_int(stmt, 1, id);
+        int rc = sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+        return rc == SQLITE_DONE && sqlite3_changes(db_) > 0;
     }
 
     // ============================================================

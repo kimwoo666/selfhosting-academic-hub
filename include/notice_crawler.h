@@ -7,6 +7,12 @@
 #include <vector>
 #include <regex>
 #include <iostream>
+#include <filesystem>
+#include <fstream>
+#include <array>
+#include <memory>
+#include <cstdio>
+#include <chrono>
 
 using json = nlohmann::json;
 
@@ -114,11 +120,89 @@ class NoticeCrawler {
         return source.compare(0, 7, "usaint_") == 0;
     }
 
+    static bool is_custom_source(const std::string& source) {
+        return source.compare(0, 7, "custom:") == 0;
+    }
+
     static std::string alert_source_label(const std::string& source) {
         if (source == "aix") return "AIX";
         if (source == "sw") return "SW";
         if (is_usaint_source(source)) return "u-SAINT";
+        if (is_custom_source(source)) return source.substr(7);
         return "NOTICE";
+    }
+
+    static std::string shell_quote(const std::string& value) {
+        std::string escaped = "\"";
+        for (char ch : value) {
+            if (ch == '"' || ch == '\\') escaped += '\\';
+            escaped += ch;
+        }
+        escaped += '"';
+        return escaped;
+    }
+
+    json fetch_custom_selector_feed(const std::string& url, const std::string& selector) {
+        namespace fs = std::filesystem;
+
+        const auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
+        fs::path config_path = fs::temp_directory_path() / ("academic_hub_notice_source_" + std::to_string(timestamp) + ".json");
+
+        {
+            std::ofstream config_file(config_path);
+            config_file << json({
+                {"url", url},
+                {"selector", selector},
+                {"limit", 20}
+            }).dump(2);
+        }
+
+        std::string cmd = "python3 scripts/custom_notice_fetch.py --config " + shell_quote(config_path.string());
+#ifdef _WIN32
+        cmd = "python scripts/custom_notice_fetch.py --config " + shell_quote(config_path.string());
+#endif
+        cmd += " 2>&1";
+
+        std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+        if (!pipe) {
+            fs::remove(config_path);
+            throw std::runtime_error("Failed to execute custom_notice_fetch.py");
+        }
+
+        std::array<char, 256> buffer{};
+        std::string output;
+        while (fgets(buffer.data(), static_cast<int>(buffer.size()), pipe.get()) != nullptr) {
+            output += buffer.data();
+        }
+
+        fs::remove(config_path);
+
+        auto json_start = output.find('{');
+        auto json_end = output.rfind('}');
+        if (json_start == std::string::npos || json_end == std::string::npos || json_end <= json_start) {
+            throw std::runtime_error("Invalid selector crawler output");
+        }
+
+        return json::parse(output.substr(json_start, json_end - json_start + 1));
+    }
+
+    std::vector<NoticeItem> parse_custom_selector_payload(const json& payload, const std::string& source_name) {
+        std::vector<NoticeItem> notices;
+        if (!payload.value("success", false) || !payload.contains("notices") || !payload["notices"].is_array()) {
+            return notices;
+        }
+
+        const std::string source_code = "custom:" + source_name;
+        for (const auto& item : payload["notices"]) {
+            const std::string title = trim(item.value("title", ""));
+            const std::string url = item.value("url", "");
+            const std::string date = normalize_notice_date(item.value("date", ""));
+            if (title.empty() || url.empty()) continue;
+            notices.push_back({source_code, title, url, date});
+        }
+
+        std::cout << "[NoticeCrawler] custom source " << source_name << ": parsed " << notices.size() << " notices\n";
+        return notices;
     }
 
     void store_new_notices(Database& db, const std::vector<NoticeItem>& notices, json& result) {
@@ -283,6 +367,24 @@ public:
                 ? parse_usaint_jsonp(body, feed.source)
                 : parse_usaint_wp(body, feed.source);
             store_new_notices(db, notices, result);
+        }
+
+        auto custom_sources = db.get_notice_sources(true);
+        if (custom_sources.is_array()) {
+            for (const auto& source : custom_sources) {
+                try {
+                    const std::string source_name = trim(source.value("name", ""));
+                    const std::string source_url = source.value("url", "");
+                    const std::string selector = trim(source.value("title_selector", ""));
+                    if (source_name.empty() || source_url.empty() || selector.empty()) continue;
+
+                    auto payload = fetch_custom_selector_feed(source_url, selector);
+                    auto notices = parse_custom_selector_payload(payload, source_name);
+                    store_new_notices(db, notices, result);
+                } catch (const std::exception& e) {
+                    std::cerr << "[NoticeCrawler] Custom source failed: " << e.what() << "\n";
+                }
+            }
         }
 
         auto unprocessed = db.get_unprocessed_notices();

@@ -114,6 +114,7 @@ public:
 
     json analyze_notice(const std::string& title, const std::string& source) {
         std::string source_name = "Soongsil notice board";
+        bool is_custom_source = source.compare(0, 7, "custom:") == 0;
         if (source == "aix") source_name = "AI Convergence notice board";
         else if (source == "sw") source_name = "School of Software notice board";
         else if (source == "usaint_academic") source_name = "u-SAINT academic notice board";
@@ -124,14 +125,19 @@ public:
         else if (source == "usaint_event") source_name = "u-SAINT extracurricular notice board";
         else if (source == "usaint_volunteer") source_name = "u-SAINT volunteer notice board";
         else if (source.compare(0, 7, "usaint_") == 0) source_name = "u-SAINT campus notice board";
+        else if (is_custom_source) source_name = source.substr(7) + " notice board";
 
-        std::string prompt = "Analyze this university notice for relevance to a CS/AI student.\n"
+        std::string prompt = std::string("Analyze this university notice for relevance to ")
+                            + (is_custom_source ? "a university student" : "a CS/AI student") + ".\n"
                             "Notice title: \"" + title + "\"\n"
-                            "Source: " + source_name + " (Soongsil University)\n\n"
+                            "Source: " + source_name + (is_custom_source ? "" : " (Soongsil University)") + "\n\n"
                             "Rate relevance 0-100 based on these interests: "
-                            "AI, machine learning, C++, backend development, hackathons, "
-                            "competitions, scholarships, internships, research opportunities, "
-                            "course registration, exam schedules.\n\n"
+                            + (is_custom_source
+                                ? "course registration, exam schedules, scholarships, internships, "
+                                  "research opportunities, competitions, exchange programs, and campus events.\n\n"
+                                : "AI, machine learning, C++, backend development, hackathons, "
+                                  "competitions, scholarships, internships, research opportunities, "
+                                  "course registration, exam schedules.\n\n")
                             "Return ONLY valid JSON (no markdown): "
                             "{\"score\": <0-100>, \"summary\": \"<brief Korean summary>\", "
                             "\"category\": \"<Academic|Scholarship|Competition|Research|General>\"}";

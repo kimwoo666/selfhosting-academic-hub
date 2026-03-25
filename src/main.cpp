@@ -781,6 +781,7 @@ int main() {
                 if (source == "aix") source_label = "AIX";
                 else if (source == "sw") source_label = "SW";
                 else if (source.compare(0, 7, "usaint_") == 0) source_label = "u-SAINT";
+                else if (source.compare(0, 7, "custom:") == 0) source_label = source.substr(7);
 
                 std::string ai_summary = n.value("ai_summary", "");
                 std::string message = ai_summary.empty()
@@ -812,6 +813,71 @@ int main() {
     // ----------------------------------------------------------
     // REST API: Notice Board Crawling
     // ----------------------------------------------------------
+    CROW_ROUTE(app, "/api/notice-sources")
+    ([&]() {
+        std::lock_guard<std::mutex> lock(db_mutex);
+        return json_response(db.get_notice_sources());
+    });
+
+    CROW_ROUTE(app, "/api/notice-sources").methods("POST"_method)
+    ([&](const crow::request& req) {
+        json body;
+        try {
+            body = json::parse(req.body);
+        } catch (...) {
+            return json_error(400, "Invalid JSON body");
+        }
+
+        const std::string name = body.value("name", "");
+        const std::string url = body.value("url", "");
+        const std::string title_selector = body.value("title_selector", "");
+        const bool enabled = body.value("enabled", true);
+
+        if (name.empty() || url.empty() || title_selector.empty()) {
+            return json_error(400, "name, url, and title_selector are required");
+        }
+
+        try {
+            std::lock_guard<std::mutex> lock(db_mutex);
+            const int id = db.add_notice_source(name, url, title_selector, enabled);
+            return json_response({{"success", true}, {"id", id}});
+        } catch (const std::exception& e) {
+            return json_error(500, std::string("Failed to add notice source: ") + e.what());
+        }
+    });
+
+    CROW_ROUTE(app, "/api/notice-sources/<int>").methods("PUT"_method)
+    ([&](const crow::request& req, int id) {
+        json body;
+        try {
+            body = json::parse(req.body);
+        } catch (...) {
+            return json_error(400, "Invalid JSON body");
+        }
+
+        const std::string name = body.value("name", "");
+        const std::string url = body.value("url", "");
+        const std::string title_selector = body.value("title_selector", "");
+        const bool enabled = body.value("enabled", true);
+
+        if (name.empty() || url.empty() || title_selector.empty()) {
+            return json_error(400, "name, url, and title_selector are required");
+        }
+
+        std::lock_guard<std::mutex> lock(db_mutex);
+        const bool updated = db.update_notice_source(id, name, url, title_selector, enabled);
+        if (!updated) return json_error(404, "Notice source not found");
+        return json_response({{"success", true}});
+    });
+
+    CROW_ROUTE(app, "/api/notice-sources/<int>").methods("DELETE"_method)
+    ([&](int id) {
+        std::lock_guard<std::mutex> lock(db_mutex);
+        const bool removed = db.delete_notice_source(id);
+        if (!removed) return json_error(404, "Notice source not found");
+        return json_response({{"success", true}});
+    });
+
     // POST /api/notices/crawl ??trigger notice crawl + LLM analysis
     CROW_ROUTE(app, "/api/notices/crawl").methods("POST"_method)
     ([&](const crow::request&) {
